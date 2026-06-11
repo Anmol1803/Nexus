@@ -91,25 +91,32 @@ export default function FileUpload({ onDataLoaded }) {
   { icon: Table2, title: "Manual Edit", desc: "Full cell-level data editing" }];
 
 
-  return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 md:p-8 bg-[#e7e4e4]">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-2xl">
-        
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent text-accent-foreground text-sm font-medium mb-6">
-            <Sparkles className="w-3.5 h-3.5" />
-            Your personal assistant for data cleaning and analysis
-          </div>
-          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-foreground mb-3">
-            Nexus <span className="text-primary">Data Studio</span>
-          </h1>
-          <p className="text-muted-foreground text-lg max-w-md mx-auto">
-            Clean, analyze, and transform your data — all in one place.
-          </p>
-        </div>
+return (
+  <div className="min-h-screen flex flex-col items-center justify-center p-4 md:p-8 bg-background">
+    {/* Logo - extreme top right */}
+    <div className="absolute top-4 left-4 z-10">
+      <img 
+        src="/Nexus.png" 
+        alt="Nexus Logo" 
+        className="w-20 h-20 object-contain"
+      />
+    </div>
+
+    {/* Centered content (your existing motion.div) */}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="w-full max-w-2xl"
+    >
+      {/* Badge, headline, upload box... (remove the old centered logo) */}
+      <div className="text-center mb-10">
+        <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-foreground mb-3">
+          Upload Clean <span className="text-primary">Transform</span>
+        </h1>
+        <p className="text-muted-foreground text-lg max-w-md mx-auto">
+          Clean, analyze, and transform your data — all in one place.
+        </p>
+      </div>
 
         <div
           className={`relative border-2 border-dashed rounded-2xl p-12 text-center transition-all duration-300 cursor-pointer group ${

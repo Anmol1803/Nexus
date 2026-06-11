@@ -2,7 +2,7 @@
 
 <br/>
 
-<img src="./Nexus_edited.png" alt="Nexus Logo" width="160"/>
+<img src="./Nexus.png" alt="Nexus Logo" width="160"/>
 
 <br/>
 

@@ -2,11 +2,7 @@
 
 <br/>
 
-<img src="./Nexus.png" alt="Nexus Logo" width="160"/>
-
-<br/>
-
-<img src="https://img.shields.io/badge/Nexus-Data%20Studio-6366f1?style=for-the-badge&logo=databricks&logoColor=white" alt="Nexus Data Studio" height="50"/>
+<img src="https://raw.githubusercontent.com/your-username/nexus-data-studio/main/Nexus_edited.png" alt="Nexus Logo" width="155"/>
 
 <br/><br/>
 
@@ -16,15 +12,33 @@
 
 <br/>
 
-[![Live Demo](https://img.shields.io/badge/🚀%20Live%20Demo-nexus--smoky--two.vercel.app-6366f1?style=for-the-badge&logoColor=white)](https://nexus-smoky-two.vercel.app/)
+<!-- ============================================================ -->
+<!--                   🔥 LIVE DEMO BANNER                        -->
+<!-- ============================================================ -->
+
+<a href="https://nexus-smoky-two.vercel.app/" target="_blank">
+  <img src="https://img.shields.io/badge/🌐%20%20LIVE%20DEMO%20%20—%20%20nexus--smoky--two.vercel.app-%236366f1?style=for-the-badge&labelColor=0f0f1a&color=6366f1&logoColor=white" alt="Live Demo" height="42"/>
+</a>
+
+<br/><br/>
+
+> ### 👆 [**Click here to try Nexus live →**](https://nexus-smoky-two.vercel.app/)
+> *No signup. No install. Just drag a CSV and go.*
+
+<br/>
+
+---
+
 [![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
 [![Vite](https://img.shields.io/badge/Vite-5-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![shadcn/ui](https://img.shields.io/badge/shadcn%2Fui-components-18181B?style=for-the-badge&logo=shadcnui&logoColor=white)](https://ui.shadcn.com/)
+[![Recharts](https://img.shields.io/badge/Recharts-Charts-22c55e?style=for-the-badge&logo=chartdotjs&logoColor=white)](https://recharts.org/)
 [![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/)
 
 <br/>
 
-> **Drag in a CSV. Get instant EDA, smart AI fill, formula columns, charts, pivot tables, and a full transformation audit trail — all in the browser. Zero setup. Zero server.**
+> **Drag in a CSV. Get instant EDA, smart AI fill, formula columns, 10+ chart types, pivot tables, and a full transformation audit trail — all in the browser. Zero setup. Zero server.**
 
 <br/>
 
@@ -34,14 +48,31 @@
 
 <br/>
 
-## 📸 Preview
+## 🗺️ What is Nexus?
+
+**Nexus Data Studio** is a fully client-side data workspace built for analysts, data scientists, and developers who need to clean, explore, and transform CSV data — fast, without spinning up a Python environment or paying for a SaaS tool.
+
+Everything runs in your browser. Your data never leaves your machine.
+
+<br/>
+
+---
+
+## ✨ Feature Overview
 
 <div align="center">
 
-| Upload & EDA | Clean & Fill | Chart Builder |
-|:---:|:---:|:---:|
-| ![upload](https://img.shields.io/badge/Upload-CSV%20%2F%20TSV-emerald?style=flat-square) | ![clean](https://img.shields.io/badge/AI-Smart%20Fill-violet?style=flat-square) | ![chart](https://img.shields.io/badge/10%2B-Chart%20Types-orange?style=flat-square) |
-| Auto-detect delimiter, instant stats | Median / Mode / AI imputation | Bar, Line, Scatter, Pie, Radar… |
+| 🔬 EDA | 🧹 Clean & Fill | 🔢 Type Conversion |
+|:------:|:---------------:|:-----------------:|
+| Auto-stats, histograms, donut charts, skewness/outlier flags | Mean/Median/Mode/AI fill, dedup, trim | Integer, Float, Date, Boolean, Percentage |
+
+| 🔡 Text Cleaning | 📅 Date & Time | ⚙️ Feature Engineering |
+|:----------------:|:--------------:|:----------------------:|
+| Case, Regex, Categorical standardization | Parse, extract components, date diff | Math ops, conditional columns, concat, Excel formulas |
+
+| 📈 Chart Builder | 🧮 Pivot Table | 🕒 History & Undo |
+|:----------------:|:--------------:|:-----------------:|
+| 10 chart types, save configs | Heatmap pivot with grand totals | Full audit trail, per-step undo |
 
 </div>
 
@@ -49,7 +80,7 @@
 
 ---
 
-## ⚡ Feature Highlights
+## ⚡ Feature Deep-Dives
 
 <br/>
 
@@ -60,7 +91,7 @@
 - **Full statistical summary** per column — Mean, Median, Std Dev, Q1/Q3, IQR, Skewness, Kurtosis, Outlier count
 - **Inline mini charts** — Histogram for numeric, Donut for categorical, Year/Weekday bars for dates
 - **Insight alerts** — Flags skewed distributions, high missing rates, high cardinality, zero variance
-- **One-click EDA report export** as CSV with all stats
+- **One-click EDA report export** as CSV with all computed stats
 
 <br/>
 
@@ -72,11 +103,11 @@
 | **Mean / Median / Mode** | Statistical imputation per column |
 | **Forward / Backward Fill** | Time-series style propagation |
 | **Custom Value** | Fill with any literal string or number |
-| **AI Smart Fill** | Uses an LLM to infer the best fill value per column, with reasoning |
+| **✨ AI Smart Fill** | LLM infers best fill value per column with reasoning |
 | **Remove Duplicates** | Hash-based full-row deduplication |
 | **Drop Rows with Missing** | Strict row removal |
 | **Trim Whitespace** | Clean all string cells at once |
-| **Find & Replace** | Global cell-level substitution |
+| **Find & Replace** | Global exact-match cell substitution |
 
 <br/>
 
@@ -89,7 +120,7 @@ Z-Score:      Outlier if  |z| > threshold                     (default threshold
 ```
 
 - Choose **Remove rows** or **Cap to median**
-- Live detection count updates as you adjust threshold
+- Live outlier count updates as you adjust threshold
 - Full undo via Transformation History
 
 <br/>
@@ -97,16 +128,14 @@ Z-Score:      Outlier if  |z| > threshold                     (default threshold
 ### 🔢 Data Type Conversion
 > *From messy strings to clean typed columns in one click.*
 
-Supported target types:
-
 ```
 Integer  │  Float  │  Number (auto)  │  Text  │  Category
 Date (YYYY-MM-DD)  │  DateTime (ISO 8601)  │  Boolean  │  Percentage
 ```
 
-- Live preview shows per-row conversion result before applying
-- Error handling modes: **Replace with null** | **Keep original** | **Mark as INVALID**
-- Column Type Overview grid — click any column to instantly switch focus
+- Live per-row conversion preview before applying
+- Error handling: **Replace with null** | **Keep original** | **Mark as INVALID**
+- Column Type Overview grid — click any column to switch focus
 
 <br/>
 
@@ -114,9 +143,12 @@ Date (YYYY-MM-DD)  │  DateTime (ISO 8601)  │  Boolean  │  Percentage
 > *Standardize messy categorical and string data.*
 
 - **Case Conversion** — UPPER / lower / Title Case with live preview
-- **Regex Find & Replace** — Full regex engine, apply to one column or all, with flag control (`g`, `gi`, `i`)
-- **Categorical Standardization** — Map multiple raw values to a single canonical form (e.g. `"USA"`, `"U.S.A"`, `"us"` → `"United States"`)
-- Auto-loads top-N most frequent values for quick mapping setup
+- **Regex Find & Replace** — Full regex engine, one column or all, flag control (`g`, `gi`, `i`)
+- **Categorical Standardization** — Map many raw variants to one canonical form
+
+```
+"USA"  "U.S.A"  "us"  "united states"   →   "United States"
+```
 
 <br/>
 
@@ -132,8 +164,7 @@ Date (YYYY-MM-DD)  │  DateTime (ISO 8601)  │  Boolean  │  Percentage
 ### ⚙️ Feature Engineering
 > *Build new columns without code.*
 
-#### Formula Builder *(Excel-style)*
-Full function library with autocomplete and inline hints:
+#### 🧮 Formula Builder *(Excel-style, 35+ functions)*
 
 | Category | Functions |
 |----------|-----------|
@@ -143,20 +174,24 @@ Full function library with autocomplete and inline hints:
 | **Date** | `YEAR`, `MONTH`, `DAY`, `WEEKDAY`, `DATEDIFF` |
 | **Statistical** | `AVG`, `MEDIAN`, `MIN`, `MAX`, `COUNT` |
 
-```excel
+```
 = IF(Sales > 1000, "High", "Low")
 = ROUND([Revenue] / [Units], 2)
 = DATEDIFF([EndDate], [StartDate], "days")
 = TEXTJOIN(" ", [FirstName], [LastName])
 ```
 
-#### Math Operation Panel
-`Column A  [+  −  ×  ÷  %  ^]  Column B / Constant  →  New Column`
+#### ➕ Math Operation Panel
+```
+Column A  [+  −  ×  ÷  %  ^]  Column B / Constant  →  New Column
+```
 
-#### Conditional Column
-`IF (col  [> >= < <= == !=]  value)  THEN "X"  ELSE "Y"  →  New Column`
+#### 🔀 Conditional Column
+```
+IF (col  [> >= < <= == !=]  value)  THEN "X"  ELSE "Y"  →  New Column
+```
 
-#### Concatenate Columns
+#### 🔗 Concatenate Columns
 Select N columns + separator → merged new column with live preview
 
 <br/>
@@ -164,58 +199,58 @@ Select N columns + separator → merged new column with live preview
 ### 📈 Chart Builder
 > *10 chart types. Zero configuration required.*
 
-| Chart | Best for |
-|-------|----------|
+| Chart Type | Best For |
+|-----------|----------|
 | **Bar** | Category comparisons |
-| **Stacked Bar** | Part-to-whole by group |
+| **Stacked Bar** | Part-to-whole breakdown by group |
 | **Line** | Trends over time |
-| **Area** | Cumulative trends |
-| **Scatter** | Correlation between 2 numerics |
-| **Bubble** | 3-variable scatter |
-| **Pie / Donut** | Proportions |
-| **Histogram** | Distribution shape |
+| **Area** | Cumulative trend visualization |
+| **Scatter** | Correlation between 2 numeric columns |
+| **Bubble** | 3-variable scatter (size = 3rd variable) |
+| **Pie / Donut** | Proportions and share |
+| **Histogram** | Distribution shape of a numeric column |
 | **Radar** | Multi-axis comparisons |
 
-**Controls:** X/Y axis, Aggregation (sum / mean / count / min / max / median), Color/Series split, Sort order, Row limit, Column filter, Chart title
+**Controls:** X/Y axis · Aggregation (sum / mean / count / min / max / median) · Color/Series split · Sort order · Row limit · Column filter · Chart title
 
-**Save Charts** — Pin any configuration to a gallery for quick recall
+**💾 Save Charts** — Pin any config to a gallery for instant recall
 
 <br/>
 
 ### 🧮 Pivot Table
 > *Spreadsheet-power pivot in the browser.*
 
-- Row field × Column field × Value field with 5 aggregation functions
-- **Heat-map shading** on cells (relative magnitude)
+- Row × Column × Value with 5 aggregation functions
+- **Heat-map cell shading** based on relative magnitude
 - Grand Total row + per-row totals
 - **Export pivot as CSV**
-- Companion bar chart auto-generated from pivot result
+- Auto-generated companion bar chart
 
 <br/>
 
 ### 🗂️ Edit Data (DataTable)
 > *Full spreadsheet-style data editor.*
 
-- Click any cell to edit in a modal
+- Click any cell to edit inline via modal
 - **Add / delete rows and columns**
 - **Formula columns** — inline formula engine with column chips
 - **Column-level filters** — Contains, Equals, GT/LT, Between, Is Empty, and more
-- **Global search** across all columns
+- **Global search** across all columns simultaneously
 - **Sort** any column ascending / descending
 - **Multi-row select** + bulk delete
 - **Pagination** — 25 rows per page
-- **Export filtered view as CSV**
+- **Export filtered view** as CSV
 
 <br/>
 
 ### 🕒 Transformation History
 > *Every action is logged. Nothing is permanent.*
 
-- Unified audit trail across **all panels** — Cleaning, Fill, Type Conversion, Text, DateTime, Feature Engineering, Formula
-- Per-entry **Undo** — restores exact data snapshot
-- **Filter** history by operation type
-- **Export** full audit trail as CSV
-- Color-coded badges per operation source
+- Unified audit trail across **all panels**
+- Per-entry **Undo** — restores exact pre-operation data snapshot
+- **Filter** history by operation source (Clean, Fill, AI, Formula, etc.)
+- **Export** the full audit trail as CSV
+- Color-coded badges per operation type
 
 <br/>
 
@@ -233,7 +268,7 @@ Select N columns + separator → merged new column with live preview
 | **Charts** | Recharts |
 | **Animations** | Framer Motion |
 | **Dates** | date-fns |
-| **Notifications** | Sonner |
+| **Notifications** | Sonner (toast) |
 | **Deployment** | Vercel |
 
 </div>
@@ -249,30 +284,30 @@ nexus/
 ├── src/
 │   ├── components/
 │   │   ├── data/
-│   │   │   ├── FileUpload.jsx           # CSV/TSV drag-drop parser
-│   │   │   ├── DataWorkspace.jsx        # Root tab shell + state
-│   │   │   ├── EDAPanel.jsx             # Column-level statistics & charts
-│   │   │   ├── CleaningPanel.jsx        # Fill, dedup, trim, outlier removal
-│   │   │   ├── TypeConversionPanel.jsx  # Data type coercion
-│   │   │   ├── TextCleaningPanel.jsx    # Case, regex, standardization
-│   │   │   ├── DateTimePanel.jsx        # Parse, extract, diff
-│   │   │   ├── FeatureEngineeringPanel.jsx  # Math, conditional, concat
-│   │   │   ├── FormulaEngine.jsx        # Excel-style formula builder
-│   │   │   ├── ChartBuilder.jsx         # 10-type interactive chart builder
-│   │   │   ├── PivotTablePanel.jsx      # Pivot table with heat-map
-│   │   │   ├── DataTable.jsx            # Editable paginated data grid
+│   │   │   ├── FileUpload.jsx                  # CSV/TSV drag-drop parser
+│   │   │   ├── DataWorkspace.jsx               # Root tab shell + global state
+│   │   │   ├── EDAPanel.jsx                    # Column-level stats & charts
+│   │   │   ├── CleaningPanel.jsx               # Fill, dedup, trim, outliers
+│   │   │   ├── TypeConversionPanel.jsx         # Data type coercion
+│   │   │   ├── TextCleaningPanel.jsx           # Case, regex, standardization
+│   │   │   ├── DateTimePanel.jsx               # Parse, extract, diff
+│   │   │   ├── FeatureEngineeringPanel.jsx     # Math, conditional, concat
+│   │   │   ├── FormulaEngine.jsx               # Excel-style formula builder
+│   │   │   ├── ChartBuilder.jsx                # 10-type chart builder
+│   │   │   ├── PivotTablePanel.jsx             # Pivot table with heat-map
+│   │   │   ├── DataTable.jsx                   # Editable paginated data grid
 │   │   │   ├── TransformationHistoryPanel.jsx  # Audit trail + undo
-│   │   │   ├── ColumnEDAPreview.jsx     # Inline column stats mini-widget
-│   │   │   ├── ActivityLog.jsx          # Legacy log component
-│   │   │   ├── AddColumnModal.jsx       # Add blank column dialog
-│   │   │   └── EditCellModal.jsx        # Cell edit dialog
-│   │   └── ui/                          # shadcn/ui component library
+│   │   │   ├── ColumnEDAPreview.jsx            # Inline column stats widget
+│   │   │   ├── AddColumnModal.jsx              # Add blank column dialog
+│   │   │   └── EditCellModal.jsx               # Cell edit dialog
+│   │   └── ui/                                 # shadcn/ui component library
 │   ├── lib/
-│   │   └── TransformationHistory.jsx    # React context for undo/redo log
+│   │   └── TransformationHistory.jsx           # React context for audit log
 │   ├── pages/
 │   │   └── Home.jsx
 │   ├── App.jsx
 │   └── main.jsx
+├── Nexus_edited.png                            # App logo
 ├── index.html
 ├── vite.config.js
 ├── tailwind.config.js
@@ -316,33 +351,33 @@ npm run build
 
 ---
 
-## 📖 Usage Guide
+## 📖 Usage Flow
 
 ```
-1. 📂  Drag & drop any CSV or TSV file onto the upload zone
-        └─ Auto-detects delimiter (comma, semicolon, tab, pipe)
+1. 📂  Drag & drop any CSV or TSV onto the upload zone
+        └─ Auto-detects delimiter: comma · semicolon · tab · pipe
 
 2. 📊  EDA tab opens automatically
-        └─ Scan column types, missing rates, distributions & insights
+        └─ Scan column types, missing rates, distributions & auto-insights
 
-3. 🧹  Switch to Clean & Fill
+3. 🧹  Clean & Fill
         └─ Fill missing values, remove duplicates, handle outliers
 
-4. 🔢  Data Types  →  Convert columns to correct types
+4. 🔢  Data Types  →  Convert columns to the correct type
 
-5. 🔡  Text Cleaning  →  Fix case, regex replace, standardize categories
+5. 🔡  Text Cleaning  →  Fix case, regex-replace, standardize categories
 
 6. 📅  Date & Time  →  Normalize dates, extract components, compute diffs
 
-7. ⚙️  Feature Engineering  →  Build new columns with formulas or math ops
+7. ⚙️  Feature Engineering  →  Build new columns with formulas or math
 
-8. 📈  Chart Builder  →  Visualize in 10+ chart types, save chart configs
+8. 📈  Chart Builder  →  Visualize in 10+ chart types, save configs
 
 9. 🧮  Pivot Table  →  Aggregate & cross-tabulate, export result
 
 10. 🗂️  Edit Data  →  Cell-level edits, add/delete rows & columns
 
-11. 🕒  History  →  Review every transformation, undo any step
+11. 🕒  History  →  Review every transformation, undo any step instantly
 ```
 
 <br/>
@@ -353,11 +388,11 @@ npm run build
 
 When you click **AI Smart Fill**, Nexus:
 
-1. Samples the first 10 rows + column metadata
-2. Sends a structured prompt to the LLM identifying all columns with missing data
-3. LLM returns — for each column — a `fill_value`, `method`, and `reason`
-4. Values are applied in one pass
-5. Each filled column gets its own log entry with the AI's reasoning
+1. Samples the first 10 rows + column type metadata
+2. Sends a structured prompt identifying all columns with missing values
+3. The LLM returns — for each column — a `fill_value`, `method`, and `reason`
+4. Values are applied in a single pass across all rows
+5. Each filled column gets its own log entry with the AI's reasoning visible
 6. A single **bulk undo** entry lets you revert all AI fills at once
 
 <br/>
@@ -377,7 +412,7 @@ git push origin feature/my-awesome-feature
 # Open a Pull Request
 ```
 
-Please follow the existing code style (functional React, Tailwind, shadcn/ui).
+Please follow the existing code style — functional React, Tailwind, shadcn/ui.
 
 <br/>
 
@@ -393,12 +428,22 @@ This project is licensed under the **MIT License** — see the [LICENSE](LICENSE
 
 <div align="center">
 
-Made with ❤️ and way too much data
+<img src="https://raw.githubusercontent.com/your-username/nexus-data-studio/main/Nexus_edited.png" alt="Nexus Logo" width="72"/>
 
-[![Live Demo](https://img.shields.io/badge/Try%20it%20now-nexus--smoky--two.vercel.app-6366f1?style=for-the-badge)](https://nexus-smoky-two.vercel.app/)
+<br/><br/>
+
+**Made with ❤️ and way too much data**
 
 <br/>
 
-*If this project helped you, drop a ⭐ — it means a lot!*
+<a href="https://nexus-smoky-two.vercel.app/" target="_blank">
+  <img src="https://img.shields.io/badge/🚀%20%20Open%20Nexus%20Data%20Studio-%236366f1?style=for-the-badge&labelColor=0f0f1a&color=6366f1" alt="Open App" height="38"/>
+</a>
+
+<br/><br/>
+
+*If Nexus saved you time, drop a ⭐ — it means the world!*
+
+<br/>
 
 </div>

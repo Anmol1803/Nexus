@@ -2,7 +2,7 @@
 
 <br/>
 
-<img src="https://raw.githubusercontent.com/your-username/nexus-data-studio/main/Nexus_edited.png" alt="Nexus Logo" width="155"/>
+<img src="https://raw.githubusercontent.com/Anmol1803/Nexus/main/Nexus_edited.png" alt="Nexus Logo" width="155"/>
 
 <br/><br/>
 
@@ -328,7 +328,7 @@ nexus/
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/your-username/nexus-data-studio.git
+git clone https://github.com/Anmol1803/Nexus.git
 cd nexus-data-studio
 
 # 2. Install dependencies
@@ -428,7 +428,7 @@ This project is licensed under the **MIT License** — see the [LICENSE](LICENSE
 
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/your-username/nexus-data-studio/main/Nexus_edited.png" alt="Nexus Logo" width="72"/>
+<img src="https://raw.githubusercontent.com/Anmol1803/Nexus/main/Nexus_edited.png" alt="Nexus Logo" width="72"/>
 
 <br/><br/>
 

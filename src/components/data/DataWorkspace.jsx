@@ -17,7 +17,7 @@ import PivotTablePanel from "./PivotTablePanel";
 import TransformationHistoryPanel from "./TransformationHistoryPanel";
 import { TransformationHistoryProvider } from "@/lib/TransformationHistory";
 import { motion } from "framer-motion";
-import SmartRecoveryPanel from "./SmartRecoveryPanel";
+import SmartRecoveryPanel from './smartrecoverypanel';
 import { Layers } from "lucide-react";
 
 

@@ -2,8 +2,18 @@ import React, { useMemo, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Hash, Type, AlertTriangle, BarChart3, TrendingUp, Percent, Calendar, Lightbulb, ChevronDown, ChevronRight, Download } from "lucide-react";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from "recharts";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Hash, Type, AlertTriangle, BarChart3, TrendingUp, Percent,
+  Calendar, Lightbulb, ChevronDown, ChevronRight, Download,
+  Activity, Copy, Grid3X3, Settings
+} from "lucide-react";
+import {
+  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
+  PieChart, Pie, Cell, LineChart, Line
+} from "recharts";
+import { pearson, cramersV, correlationRatio } from "@/lib/nexus/stats";
+import { normalizeValue } from "@/lib/nexus/parser";
 
 const CHART_COLORS = [
   "hsl(245, 58%, 51%)", "hsl(180, 55%, 45%)", "hsl(30, 80%, 55%)",
@@ -11,6 +21,7 @@ const CHART_COLORS = [
   "hsl(60, 70%, 45%)", "hsl(280, 50%, 55%)"
 ];
 
+// ---------- Helpers (unchanged) ----------
 function quantile(sorted, q) {
   const pos = (sorted.length - 1) * q;
   const base = Math.floor(pos);
@@ -20,7 +31,8 @@ function quantile(sorted, q) {
 
 function entropy(counts, total) {
   return -Object.values(counts).reduce((acc, c) => {
-    const p = c / total; return acc + (p > 0 ? p * Math.log2(p) : 0);
+    const p = c / total;
+    return acc + (p > 0 ? p * Math.log2(p) : 0);
   }, 0);
 }
 
@@ -145,10 +157,19 @@ function ColumnCard({ col, values }) {
     if (!numStats) return null;
     const nums = values.map(Number).filter(n => !isNaN(n));
     if (nums.length === 0) return null;
-    const bins = 10; const range = numStats.max - numStats.min;
+    const bins = 10;
+    const range = numStats.max - numStats.min;
     const binWidth = range === 0 ? 1 : range / bins;
-    const buckets = Array.from({ length: bins }, (_, i) => ({ label: (numStats.min + i * binWidth).toFixed(1), count: 0 }));
-    nums.forEach(n => { let idx = range === 0 ? 0 : Math.floor((n - numStats.min) / binWidth); if (idx < 0) idx = 0; if (idx >= bins) idx = bins - 1; buckets[idx].count++; });
+    const buckets = Array.from({ length: bins }, (_, i) => ({
+      label: (numStats.min + i * binWidth).toFixed(1),
+      count: 0
+    }));
+    nums.forEach(n => {
+      let idx = range === 0 ? 0 : Math.floor((n - numStats.min) / binWidth);
+      if (idx < 0) idx = 0;
+      if (idx >= bins) idx = bins - 1;
+      buckets[idx].count++;
+    });
     return buckets;
   }, [values, numStats]);
 
@@ -226,9 +247,12 @@ function ColumnCard({ col, values }) {
             <div className="h-28">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
-                  <Pie data={catStats.top.map(([name, value]) => ({ name, value }))} cx="50%" cy="50%"
-                    innerRadius={25} outerRadius={48} paddingAngle={2} dataKey="value">
-                    {catStats.top.map((_, i) => <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />)}
+                  <Pie data={catStats.top.map(([name, value]) => ({ name, value }))}
+                    cx="50%" cy="50%" innerRadius={25} outerRadius={48}
+                    paddingAngle={2} dataKey="value">
+                    {catStats.top.map((_, i) => (
+                      <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />
+                    ))}
                   </Pie>
                   <Tooltip contentStyle={{ fontSize: 11, borderRadius: 8 }} />
                 </PieChart>
@@ -280,7 +304,6 @@ function ColumnCard({ col, values }) {
           <p className="text-xs text-muted-foreground">{dateStats.min} → {dateStats.max} ({dateStats.rangeYears} yrs)</p>
         )}
 
-        {/* Insights */}
         {insights.length > 0 && (
           <div className="mt-2 space-y-1">
             {insights.map((ins, i) => (
@@ -322,10 +345,14 @@ function generateReportCSV(data, columns) {
         const q3v = nums[Math.floor(nums.length * 0.75)];
         const iqrv = q3v - q1v;
         const med = nums.length % 2 === 0 ? (nums[nums.length/2-1]+nums[nums.length/2])/2 : nums[Math.floor(nums.length/2)];
-        const sk = sd === 0 ? 0 : (() => { const n = nums.length; return (n / ((n-1)*(n-2))) * nums.reduce((acc, x) => acc + ((x-m)/sd)**3, 0); })();
+        const sk = sd === 0 ? 0 : (() => {
+          const n = nums.length;
+          return (n / ((n-1)*(n-2))) * nums.reduce((acc, x) => acc + ((x-m)/sd)**3, 0);
+        })();
         const outs = nums.filter(n => n < q1v - 1.5*iqrv || n > q3v + 1.5*iqrv).length;
         mean = m.toFixed(4); median = med.toFixed(4); std = sd.toFixed(4);
-        min = nums[0]; max = nums[nums.length-1]; q1 = q1v.toFixed(4); q3 = q3v.toFixed(4); iqr = iqrv.toFixed(4); skew = sk.toFixed(4); outliers = outs;
+        min = nums[0]; max = nums[nums.length-1]; q1 = q1v.toFixed(4); q3 = q3v.toFixed(4);
+        iqr = iqrv.toFixed(4); skew = sk.toFixed(4); outliers = outs;
       }
     }
     rows.push([col, type, nonEmpty.length, missing, missingPct, unique, mean, median, std, min, max, q1, q3, iqr, skew, outliers]);
@@ -333,17 +360,460 @@ function generateReportCSV(data, columns) {
   return rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(",")).join("\n");
 }
 
-export default function EDAPanel({ data, columns, fileName }) {
+// ---------- Column Type Override Panel ----------
+function TypeOverridePanel({ columns, overrides, onOverrideChange, autoTypes }) {
+  const [expanded, setExpanded] = useState(false);
+
+  if (!expanded) {
+    return (
+      <Button variant="outline" size="sm" onClick={() => setExpanded(true)} className="text-xs">
+        <Settings className="w-3.5 h-3.5 mr-1" /> Column Type Overrides
+      </Button>
+    );
+  }
+
+  return (
+    <div className="border border-border rounded-lg p-3 bg-muted/20">
+      <div className="flex items-center justify-between mb-2">
+        <h4 className="text-xs font-semibold">Column Type Overrides</h4>
+        <Button variant="ghost" size="sm" onClick={() => setExpanded(false)} className="h-6 px-2 text-xs">
+          Close
+        </Button>
+      </div>
+      <div className="overflow-auto max-h-64">
+        <table className="w-full text-xs">
+          <thead className="text-[10px] uppercase text-muted-foreground">
+            <tr>
+              <th className="py-1 pr-2 text-left">Column</th>
+              <th className="py-1 pr-2 text-left">Auto Type</th>
+              <th className="py-1 pr-2 text-left">Override</th>
+            </tr>
+          </thead>
+          <tbody>
+            {columns.map(col => {
+              const currentOverride = overrides[col] || 'auto';
+              const autoType = autoTypes[col] || 'unknown';
+              return (
+                <tr key={col} className="border-t border-border/40">
+                  <td className="py-1 pr-2">{col}</td>
+                  <td className="py-1 pr-2">
+                    <Badge variant="outline" className="text-[9px]">{autoType}</Badge>
+                  </td>
+                  <td className="py-1 pr-2">
+                    <select
+                      value={currentOverride}
+                      onChange={(e) => onOverrideChange(col, e.target.value)}
+                      className="text-xs border border-border rounded px-1 py-0.5 bg-background"
+                    >
+                      <option value="auto">Auto</option>
+                      <option value="numeric">Numeric</option>
+                      <option value="categorical">Categorical</option>
+                      <option value="exclude">Exclude</option>
+                    </select>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+      <div className="mt-2 flex gap-2">
+        <Button variant="outline" size="sm" onClick={() => onOverrideChange('__reset__')} className="text-xs h-7">
+          Reset All
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+// ---------- Enhanced Association Matrix (with overrides) ----------
+function CorrelationHeatmap({ data, columns, overrides = {}, onOverrideChange }) {
+  // ----- Clean data -----
+  const cleanedData = useMemo(() => {
+    return data.map(row => {
+      const newRow = {};
+      columns.forEach(col => {
+        try {
+          newRow[col] = normalizeValue(row[col]);
+        } catch (e) {
+          newRow[col] = null;
+        }
+      });
+      return newRow;
+    });
+  }, [data, columns]);
+
+  // ----- Auto‑detect types (based on cleaned data) -----
+  const autoTypes = useMemo(() => {
+    const types = {};
+    columns.forEach(col => {
+      const vals = cleanedData.map(r => r[col]);
+      types[col] = inferColType(vals);
+    });
+    return types;
+  }, [cleanedData, columns]);
+
+  // ----- Resolve effective type (override > auto) -----
+  const getEffectiveType = (col) => {
+    const override = overrides[col];
+    if (override === 'numeric') return 'numeric';
+    if (override === 'categorical') return 'categorical';
+    if (override === 'exclude') return 'exclude';
+    return autoTypes[col] || 'categorical';
+  };
+
+  // ----- Build numeric and categorical lists based on effective type -----
+  const numericCols = useMemo(() => {
+    return columns.filter(col => getEffectiveType(col) === 'numeric');
+  }, [columns, overrides, autoTypes]);
+
+  const categoricalCols = useMemo(() => {
+    return columns.filter(col => getEffectiveType(col) === 'categorical');
+  }, [columns, overrides, autoTypes]);
+
+  // ----- Excluded columns -----
+  const excludedCols = useMemo(() => {
+    return columns.filter(col => getEffectiveType(col) === 'exclude');
+  }, [columns, overrides, autoTypes]);
+
+  const [view, setView] = useState("mixed");
+  const [showAll, setShowAll] = useState(false);
+
+  const displayCols = useMemo(() => {
+    let cols = [];
+    if (view === "numeric") cols = numericCols;
+    else if (view === "categorical") cols = categoricalCols;
+    else cols = [...numericCols, ...categoricalCols];
+    if (!showAll && cols.length > 20) return cols.slice(0, 20);
+    return cols;
+  }, [view, numericCols, categoricalCols, showAll]);
+
+  // ----- Compute matrix (uses cleanedData) -----
+  const associationMatrix = useMemo(() => {
+    if (displayCols.length < 2) return null;
+    const mat = {};
+    for (let i = 0; i < displayCols.length; i++) {
+      const col1 = displayCols[i];
+      mat[col1] = {};
+      for (let j = 0; j < displayCols.length; j++) {
+        const col2 = displayCols[j];
+        if (col1 === col2) {
+          mat[col1][col2] = 1;
+          continue;
+        }
+
+        const col1Type = getEffectiveType(col1);
+        const col2Type = getEffectiveType(col2);
+        const pairs = [];
+        for (let k = 0; k < cleanedData.length; k++) {
+          const a = cleanedData[k][col1];
+          const b = cleanedData[k][col2];
+          if (a !== null && a !== undefined && b !== null && b !== undefined) {
+            pairs.push({ a, b });
+          }
+        }
+        if (pairs.length < 2) {
+          mat[col1][col2] = 0;
+          continue;
+        }
+
+        let val = 0;
+        if (col1Type === 'numeric' && col2Type === 'numeric') {
+          const a = pairs.map(p => p.a);
+          const b = pairs.map(p => p.b);
+          val = pearson(a, b);
+          if (view === 'mixed') val = Math.abs(val);
+        } else if (col1Type === 'categorical' && col2Type === 'categorical') {
+          const cats1 = pairs.map(p => String(p.a));
+          const cats2 = pairs.map(p => String(p.b));
+          val = cramersV(cats1, cats2);
+        } else {
+          // Mixed: numeric vs categorical
+          const numericCol = col1Type === 'numeric' ? col1 : col2;
+          const catCol = col1Type === 'categorical' ? col1 : col2;
+          const nums = pairs.map(p => (col1Type === 'numeric' ? p.a : p.b));
+          const cats = pairs.map(p => (col1Type === 'categorical' ? p.a : p.b));
+          const uniqueCats = new Set(cats);
+          if (uniqueCats.size >= 2 && uniqueCats.size <= 50) {
+            val = correlationRatio(cats, nums);
+          }
+        }
+        mat[col1][col2] = isNaN(val) ? 0 : val;
+      }
+    }
+    return mat;
+  }, [displayCols, cleanedData, view, overrides, autoTypes]);
+
+  const getColor = (val) => {
+    if (view === 'numeric') {
+      if (val === 0) return "#ffffff";
+      const abs = Math.abs(val);
+      const t = Math.min(1, abs);
+      if (val > 0) {
+        const r = 255;
+        const g = Math.round(255 * (1 - t));
+        const b = Math.round(255 * (1 - t));
+        return `rgb(${r}, ${g}, ${b})`;
+      } else {
+        const r = Math.round(255 * (1 - t));
+        const g = Math.round(255 * (1 - t));
+        const b = 255;
+        return `rgb(${r}, ${g}, ${b})`;
+      }
+    } else {
+      const t = Math.min(1, val);
+      const r = 255;
+      const g = Math.round(255 * (1 - t));
+      const b = Math.round(255 * (1 - t));
+      return `rgb(${r}, ${g}, ${b})`;
+    }
+  };
+
+  const formatVal = (v) => v.toFixed(2);
+  const getViewLabel = () => {
+    switch (view) {
+      case 'numeric': return 'Numeric (Pearson)';
+      case 'categorical': return 'Categorical (Cramer\'s V)';
+      default: return 'Mixed (Best Measure)';
+    }
+  };
+
+  const downloadMatrixCSV = () => {
+    if (!associationMatrix) return;
+    const rows = [["", ...displayCols]];
+    for (const col1 of displayCols) {
+      const row = [col1];
+      for (const col2 of displayCols) {
+        row.push(associationMatrix[col1]?.[col2]?.toFixed(4) ?? "");
+      }
+      rows.push(row);
+    }
+    const csv = rows.map(r => r.join(",")).join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `association_matrix_${view}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  if (displayCols.length < 2) {
+    let msg = '';
+    if (view === 'numeric') msg = 'No numeric columns found.';
+    else if (view === 'categorical') msg = 'No categorical columns found.';
+    else msg = 'Need at least 2 columns to compute associations.';
+    return (
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm font-semibold flex items-center gap-2">
+            <Grid3X3 className="w-4 h-4 text-primary" /> Association Matrix
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-xs text-muted-foreground">{msg}</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <Card>
+      <CardHeader className="pb-2">
+        <div className="flex items-center justify-between flex-wrap gap-2">
+          <div className="flex items-center gap-3">
+            <CardTitle className="text-sm font-semibold flex items-center gap-2">
+              <Grid3X3 className="w-4 h-4 text-primary" /> Association Matrix
+              <Badge variant="secondary" className="text-[10px]">{getViewLabel()}</Badge>
+            </CardTitle>
+            <select
+              value={view}
+              onChange={(e) => setView(e.target.value)}
+              className="text-xs border border-border rounded px-2 py-1 bg-background"
+            >
+              <option value="numeric">Numeric (Pearson)</option>
+              <option value="categorical">Categorical (Cramer's V)</option>
+              <option value="mixed">Mixed (Best Measure)</option>
+            </select>
+            <TypeOverridePanel
+              columns={columns}
+              overrides={overrides}
+              onOverrideChange={onOverrideChange}
+              autoTypes={autoTypes}
+            />
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" onClick={downloadMatrixCSV} className="text-xs h-7">
+              <Download className="w-3.5 h-3.5 mr-1" /> Export CSV
+            </Button>
+            {displayCols.length > 20 && (
+              <Button variant="outline" size="sm" onClick={() => setShowAll(!showAll)} className="text-xs h-7">
+                {showAll ? "Show fewer" : "Show all"}
+              </Button>
+            )}
+          </div>
+        </div>
+        <p className="text-xs text-muted-foreground">
+          {view === 'numeric' && 'Pearson correlation (signed). Red = positive, blue = negative, white = none.'}
+          {view === 'categorical' && 'Cramer\'s V (0 = independent, 1 = fully associated). Darker = stronger.'}
+          {view === 'mixed' && 'Numeric↔numeric: Pearson (absolute); categorical↔categorical: Cramer\'s V; mixed: correlation ratio. Darker = stronger (0–1).'}
+        </p>
+      </CardHeader>
+      <CardContent>
+        <div className="overflow-auto max-h-[600px]">
+          <div className="min-w-[800px]">
+            <div className="flex items-center border-b border-border">
+              <div className="w-24 shrink-0 px-2 py-1 text-xs font-medium text-muted-foreground sticky left-0 bg-background z-10">
+                Column
+              </div>
+              {displayCols.map(col => (
+                <div
+                  key={col}
+                  className="w-20 shrink-0 text-center text-xs font-medium text-muted-foreground truncate px-1"
+                  title={col}
+                >
+                  {col}
+                </div>
+              ))}
+            </div>
+            {displayCols.map(col1 => (
+              <div key={col1} className="flex items-center border-b border-border/40">
+                <div className="w-24 shrink-0 px-2 py-1 text-xs font-medium truncate sticky left-0 bg-background z-10" title={col1}>
+                  {col1}
+                </div>
+                {displayCols.map(col2 => {
+                  const val = associationMatrix[col1]?.[col2] ?? 0;
+                  const absVal = Math.abs(val);
+                  return (
+                    <div
+                      key={col2}
+                      className="w-20 h-8 shrink-0 flex items-center justify-center text-[10px] font-mono"
+                      style={{ backgroundColor: getColor(val), color: absVal > 0.6 ? "#fff" : "#000" }}
+                      title={`${col1} vs ${col2}: ${val.toFixed(3)}`}
+                    >
+                      {formatVal(val)}
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+// ---------- Data Quality Dashboard (unchanged) ----------
+function DataQualityDashboard({ data, columns }) {
   const totalCells = data.length * columns.length;
+  const missingCells = useMemo(() => {
+    let count = 0;
+    data.forEach(row => columns.forEach(col => {
+      if (row[col] === "" || row[col] === null || row[col] === undefined) count++;
+    }));
+    return count;
+  }, [data, columns]);
+
+  const duplicateRows = useMemo(() => {
+    const unique = new Set(data.map(row => JSON.stringify(row)));
+    return data.length - unique.size;
+  }, [data]);
+
+  const constantCols = useMemo(() => {
+    let count = 0;
+    columns.forEach(col => {
+      const nonNull = data.map(r => r[col]).filter(v => v !== "" && v !== null && v !== undefined);
+      if (nonNull.length > 0) {
+        const unique = new Set(nonNull);
+        if (unique.size === 1) count++;
+      }
+    });
+    return count;
+  }, [data, columns]);
+
+  const avgCardinality = useMemo(() => {
+    let totalUnique = 0;
+    let catCols = 0;
+    columns.forEach(col => {
+      const nonNull = data.map(r => r[col]).filter(v => v !== "" && v !== null && v !== undefined);
+      if (nonNull.length > 0) {
+        const unique = new Set(nonNull);
+        const type = inferColType(data.map(r => r[col]));
+        if (type === "categorical") {
+          totalUnique += unique.size;
+          catCols++;
+        }
+      }
+    });
+    return catCols > 0 ? totalUnique / catCols : 0;
+  }, [data, columns]);
+
+  const highCardCols = useMemo(() => {
+    let count = 0;
+    columns.forEach(col => {
+      const nonNull = data.map(r => r[col]).filter(v => v !== "" && v !== null && v !== undefined);
+      if (nonNull.length > 0) {
+        const unique = new Set(nonNull);
+        const type = inferColType(data.map(r => r[col]));
+        if (type === "categorical" && unique.size > 50) count++;
+      }
+    });
+    return count;
+  }, [data, columns]);
+
+  const missingPct = totalCells ? ((missingCells / totalCells) * 100) : 0;
+  const duplicatePct = data.length ? ((duplicateRows / data.length) * 100) : 0;
+
+  const metrics = [
+    { label: "Missing Cells", value: `${missingPct.toFixed(1)}%`, icon: Percent },
+    { label: "Duplicate Rows", value: `${duplicatePct.toFixed(1)}%`, icon: Copy },
+    { label: "Constant Columns", value: constantCols, icon: Activity },
+    { label: "Avg Cardinality", value: avgCardinality.toFixed(1), icon: Hash },
+    { label: "High-Cardinality Columns", value: highCardCols, icon: AlertTriangle },
+  ];
+
+  return (
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+      {metrics.map(m => (
+        <Card key={m.label} className="border-border">
+          <CardContent className="p-4 flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+              <m.icon className="w-3.5 h-3.5 text-primary" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-[10px] text-muted-foreground">{m.label}</p>
+              <p className="text-base font-bold text-foreground">{m.value}</p>
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  );
+}
+
+// ---------- Main EDAPanel ----------
+export default function EDAPanel({ data, columns, fileName }) {
   const [search, setSearch] = useState("");
+  const [columnOverrides, setColumnOverrides] = useState({});
+
+  const handleOverrideChange = (col, value) => {
+    if (col === '__reset__') {
+      setColumnOverrides({});
+      return;
+    }
+    setColumnOverrides(prev => ({ ...prev, [col]: value === 'auto' ? undefined : value }));
+  };
 
   const downloadReport = () => {
     const csv = generateReportCSV(data, columns);
     const blob = new Blob([csv], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement("a"); a.href = url;
+    const a = document.createElement("a");
+    a.href = url;
     a.download = `eda_report_${(fileName || "data").replace(/\.[^.]+$/, "")}.csv`;
-    a.click(); URL.revokeObjectURL(url);
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   const missingCells = useMemo(() => {
@@ -374,12 +844,11 @@ export default function EDAPanel({ data, columns, fileName }) {
     { label: "Numeric", value: typeCounts.numeric, icon: Hash },
     { label: "Categorical", value: typeCounts.categorical, icon: Type },
     { label: "Date", value: typeCounts.date, icon: Calendar },
-    { label: "Missing", value: `${missingCells} (${((missingCells / (totalCells || 1)) * 100).toFixed(1)}%)`, icon: AlertTriangle },
+    { label: "Missing", value: `${missingCells} (${((missingCells / (data.length * columns.length || 1)) * 100).toFixed(1)}%)`, icon: AlertTriangle },
   ];
 
   return (
     <div className="space-y-6">
-      {/* Overview cards */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
         {overviewStats.map(s => (
           <Card key={s.label} className="border-border">
@@ -396,7 +865,25 @@ export default function EDAPanel({ data, columns, fileName }) {
         ))}
       </div>
 
-      {/* Per-column analysis */}
+      <div>
+        <h2 className="text-base font-bold text-foreground mb-3 flex items-center gap-2">
+          <Activity className="w-4 h-4 text-primary" /> Data Quality Dashboard
+        </h2>
+        <DataQualityDashboard data={data} columns={columns} />
+      </div>
+
+      <div>
+        <h2 className="text-base font-bold text-foreground mb-3 flex items-center gap-2">
+          <Grid3X3 className="w-4 h-4 text-primary" /> Correlation Analysis
+        </h2>
+        <CorrelationHeatmap
+          data={data}
+          columns={columns}
+          overrides={columnOverrides}
+          onOverrideChange={handleOverrideChange}
+        />
+      </div>
+
       <div>
         <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
           <h2 className="text-base font-bold text-foreground">Column Analysis</h2>

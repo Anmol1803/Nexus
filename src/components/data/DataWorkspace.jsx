@@ -17,6 +17,9 @@ import PivotTablePanel from "./PivotTablePanel";
 import TransformationHistoryPanel from "./TransformationHistoryPanel";
 import { TransformationHistoryProvider } from "@/lib/TransformationHistory";
 import { motion } from "framer-motion";
+import SmartRecoveryPanel from "./SmartRecoveryPanel";
+import { Layers } from "lucide-react";
+
 
 export default function DataWorkspace({ initialData, columns: initialCols, fileName, onReset }) {
   const [data, setData] = useState(initialData);
@@ -90,6 +93,9 @@ export default function DataWorkspace({ initialData, columns: initialCols, fileN
               <TabsTrigger value="clean" className="gap-1.5 text-xs">
                 <Sparkles className="w-3.5 h-3.5" /> Clean & Fill
               </TabsTrigger>
+              <TabsTrigger value="recovery" className="gap-1.5 text-xs">
+               <Layers className="w-3.5 h-3.5" /> Smart Recovery
+              </TabsTrigger>              
               <TabsTrigger value="types" className="gap-1.5 text-xs">
                 <Hash className="w-3.5 h-3.5" /> Data Types
               </TabsTrigger>
@@ -122,6 +128,14 @@ export default function DataWorkspace({ initialData, columns: initialCols, fileN
             <TabsContent value="clean">
               <CleaningPanel data={data} columns={columns} setData={setData} setColumns={setColumns} />
             </TabsContent>
+            <TabsContent value="recovery">
+             <SmartRecoveryPanel 
+               data={data} 
+               columns={columns} 
+               setData={setData} 
+               setColumns={setColumns} 
+             />
+           </TabsContent>            
             <TabsContent value="types">
               <TypeConversionPanel data={data} columns={columns} setData={setData} setColumns={setColumns} />
             </TabsContent>

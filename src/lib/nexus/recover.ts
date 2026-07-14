@@ -12,7 +12,7 @@ import type {
 import { mean, median, mode, std, skewness } from "./stats";
 import { binNumeric } from "./relationships";
 import { isMissing } from "./profile";
-import { runMLImputation } from "./mlImpute";
+import { runMLImputation } from "./mlimpute";
 
 // ============================================================
 // Adaptive Min Support
